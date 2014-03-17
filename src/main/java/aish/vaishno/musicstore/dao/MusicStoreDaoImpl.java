@@ -6,7 +6,7 @@ package aish.vaishno.musicstore.dao;
 
 
 import aish.vaishno.musicstore.manager.HibernateSessionManager;
-import aish.vaishno.musicstore.pojo.MusicDetails;
+import aish.vaishno.musicstore.pojo.MusicDetail;
 import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.HibernateException;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 public class MusicStoreDaoImpl implements IMusicStoreDao{
     
     @Override
-    public String addSong(MusicDetails musicDetails) {
+    public String addSong(MusicDetail musicDetails) {
         SessionFactory sessionFactory= HibernateSessionManager.getSessionFactory();
         System.out.println("session Factory: "+sessionFactory);
         Session session=sessionFactory.openSession();
@@ -45,17 +45,56 @@ public class MusicStoreDaoImpl implements IMusicStoreDao{
      
     
     @Override
-    public List<MusicDetails> getSongList() {
+    public List<MusicDetail> getSongList() {
       SessionFactory sessionFactory=HibernateSessionManager.getSessionFactory();
       Session session=sessionFactory.getCurrentSession();
       Transaction transaction=session.beginTransaction();
       try{
         transaction.begin();
-        List<MusicDetails> songList=session.createQuery("from MusicDetails").list();
+        List<MusicDetail> songList=session.createQuery("from MusicDetails").list();
         return songList;
       }finally{
         session.close();
       }
    }
+    
+    
+     /*ja som to robil*/
+       public void updateSong(MusicDetail musicDetail) {
+           SessionFactory sessionFactory=HibernateSessionManager.getSessionFactory();
+            Session session=sessionFactory.getCurrentSession();
+            Transaction transaction=session.beginTransaction();
+
+          MusicDetail songToUpdate = getSong(musicDetail.getMusicID());
+          songToUpdate.setMusicLanguage(musicDetail.getMusicLanguage());
+          songToUpdate.setMusicType(musicDetail.getMusicType());
+          songToUpdate.setSongName(musicDetail.getSongName());
+          session.update(songToUpdate);
+    }
+        
+        
+        public MusicDetail getSong(int musicID) {
+            SessionFactory sessionFactory=HibernateSessionManager.getSessionFactory();
+            Session session=sessionFactory.getCurrentSession();
+            Transaction transaction=session.beginTransaction();
+            
+		MusicDetail song = (MusicDetail) session.get(MusicDetail.class, musicID);
+		return song;
+	}
+        
+        
+        
+        public void deleteSong(int musicID) {
+            SessionFactory sessionFactory=HibernateSessionManager.getSessionFactory();
+            Session session=sessionFactory.getCurrentSession();
+            Transaction transaction=session.beginTransaction();
+            
+		MusicDetail song = getSong(musicID);
+		if (song != null)
+			session.delete(song);
+	}
+        
+    
+        /* koniec moje */
 
   }

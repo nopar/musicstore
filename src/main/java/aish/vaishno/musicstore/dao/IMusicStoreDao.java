@@ -4,7 +4,7 @@
  */
 package aish.vaishno.musicstore.dao;
 
-import aish.vaishno.musicstore.pojo.MusicDetails;
+import aish.vaishno.musicstore.pojo.MusicDetail;
 import java.util.List;
 
 /**
@@ -13,7 +13,11 @@ import java.util.List;
  */
 public interface IMusicStoreDao {
     
-    public String addSong(MusicDetails musicDetails);
-    public List<MusicDetails> getSongList();
-      
+    public String addSong(MusicDetail musicDetail);
+    public List<MusicDetail> getSongList();
+    
+    /**/
+        public MusicDetail getSong(int musicID);
+	public void deleteSong(int musicID);
+        public void updateSong(MusicDetail musicDetail);
 }

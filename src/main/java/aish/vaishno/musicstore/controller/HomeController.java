@@ -1,7 +1,7 @@
 package aish.vaishno.musicstore.controller;
 
 import aish.vaishno.musicstore.dao.IMusicStoreDao;
-import aish.vaishno.musicstore.pojo.MusicDetails;
+import aish.vaishno.musicstore.pojo.MusicDetail;
 import aish.vaishno.musicstore.service.IMusicStoreService;
 import java.io.IOException;
 import java.util.List;
@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,18 +26,18 @@ public class HomeController {
 	@RequestMapping(value="/")
 	public ModelAndView test(HttpServletResponse response) throws IOException{
             
-		return new ModelAndView("home","musicDetForm",new MusicDetails());
+		return new ModelAndView("home","musicDetForm",new MusicDetail());
 	}
         
         @RequestMapping(value="AddSong",method = RequestMethod.POST)
         @ResponseBody
-        public String addSong(@ModelAttribute("musicDetForm") MusicDetails musicDetails){
+        public String addSong(@ModelAttribute("musicDetForm") MusicDetail musicDetails){
            return musicStoreService.addSong(musicDetails);
         }
         
         @RequestMapping(value = "SongList/",method = RequestMethod.GET)
         @ResponseBody
-        public List<MusicDetails> getSongList(){
+        public List<MusicDetail> getSongList(){
             return musicStoreService.getSongList();
         }
         
@@ -44,9 +45,18 @@ public class HomeController {
 	public ModelAndView listOfTeams() {
 		ModelAndView modelAndView = new ModelAndView("list");
 		
-		List<MusicDetails> polozky = musicStoreService.getSongList();
+		List<MusicDetail> polozky = musicStoreService.getSongList();
 		modelAndView.addObject("polozky", polozky);
 		
+		return modelAndView;
+	}
+        
+        @RequestMapping(value="/delete/{id}", method=RequestMethod.GET)
+	public ModelAndView deleteTeam(@PathVariable Integer musicID) {
+		ModelAndView modelAndView = new ModelAndView("home");
+		musicStoreService.deleteSong(musicID);
+		String message = "Team was successfully deleted.";
+		modelAndView.addObject("message", message);
 		return modelAndView;
 	}
 }

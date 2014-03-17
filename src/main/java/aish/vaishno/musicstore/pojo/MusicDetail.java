@@ -18,7 +18,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "MUSIC_COLLECTIONS")
-public class MusicDetails implements Serializable {
+public class MusicDetail implements Serializable {
     
   @Id
   @Column(name = "MC_ID")
